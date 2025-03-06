@@ -89,8 +89,8 @@ def display_score():
 
 
 def collision_sprite():
-    if pygame.sprite.spritecollide(player.sprite, obstacle_group, False):
-        obstacle_group.empty()
+    if pygame.sprite.spritecollide(player.sprite, obstaculos, False):
+        obstaculos.empty()
         return False
     else:
         return True
@@ -100,34 +100,33 @@ pygame.init()
 screen = pygame.display.set_mode((800, 400))
 pygame.display.set_caption('Meu Jogo')
 clock = pygame.time.Clock()
-font = pygame.font.Font('Pixeltype.ttf', 50)
+font = pygame.font.Font('asset/Pixeltype.ttf', 50)
 game_ativo = False
-startTime = 0
-score = 0
 music = pygame.mixer.Sound('asset/music.wav')
 music.play(loops=-1)
+startTime = 0
+score = 0
 
-# Groups
 player = pygame.sprite.GroupSingle()
 player.add(Player())
 
-obstacle_group = pygame.sprite.Group()
+obstaculos = pygame.sprite.Group()
 
 bg_castle = pygame.image.load('asset/bg_castle.png').convert()
 ground = pygame.image.load('asset/ground.png').convert()
 
-# Intro screen
+#Inicio
 player_img = pygame.image.load('asset/playerstand.png').convert_alpha()
 player_img = pygame.transform.rotozoom(player_img, 0, 2)
 player_img_rect = player_img.get_rect(center=(400, 200))
 
 game_name = font.render('Corrida', False, (86, 7, 12))
-game_name_rect = game_name.get_rect(center=(400, 80))
+game_name_rect = game_name.get_rect(center=(400, 60))
 
-start_message = font.render('Pressione  SPACE  para jogar', False, (86, 7, 12))
-start_message_rect = start_message.get_rect(center=(400, 330))
+start_msg = font.render('Pressione  SPACE  para jogar', False, (86, 7, 12))
+start_msg_rect = start_msg.get_rect(center=(400, 350))
 
-# Timer
+#Tempo
 obstacleTimer = pygame.USEREVENT + 1
 pygame.time.set_timer(obstacleTimer, 1500)
 
@@ -139,7 +138,7 @@ while True:
 
         if game_ativo:
             if event.type == obstacleTimer:
-                obstacle_group.add(Obstacle(choice(['bat', 'frog', 'frog', 'frog'])))
+                obstaculos.add(Obstacle(choice(['bat', 'frog', 'frog', 'frog'])))
 
         else:
             if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
@@ -154,8 +153,8 @@ while True:
         player.draw(screen)
         player.update()
 
-        obstacle_group.draw(screen)
-        obstacle_group.update()
+        obstaculos.draw(screen)
+        obstaculos.update()
 
         game_ativo = collision_sprite()
 
@@ -163,14 +162,14 @@ while True:
         screen.fill((94, 129, 162))
         screen.blit(player_img, player_img_rect)
 
-        score_message = font.render(f'Sua pontuacao: {score}', False, (86, 7, 12))
-        score_message_rect = score_message.get_rect(center=(400, 330))
+        score_msg = font.render(f'Sua pontuacao: {score}', False, (86, 7, 12))
+        score_msg_rect = score_msg.get_rect(center=(400, 330))
         screen.blit(game_name, game_name_rect)
 
         if score == 0:
-            screen.blit(start_message, start_message_rect)
+            screen.blit(start_msg, start_msg_rect)
         else:
-            screen.blit(score_message, score_message_rect)
+            screen.blit(score_msg, score_msg_rect)
 
     pygame.display.update()
     clock.tick(60)
